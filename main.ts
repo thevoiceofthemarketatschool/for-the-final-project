@@ -112,6 +112,17 @@ sprites.onOverlap(SpriteKind.enemyimage, SpriteKind.deleteimage, function (sprit
 scene.onOverlapTile(SpriteKind.Player, assets.tile`myTile2`, function (sprite3, location3) {
     createValidRoom("fromDown", sprite3.x, 24)
 })
+sprites.onDestroyed(SpriteKind.Enemy, function (sprite5) {
+    mySprite5 = sprites.create(img`
+        2 
+        `, SpriteKind.deleteimage)
+    EXP += 0.5
+    mySprite5.setPosition(sprite5.x, sprite5.y)
+    mySprite5.lifespan = 100
+    if (sprites.allOfKind(SpriteKind.Enemy).length == 0) {
+        unlockDoors()
+    }
+})
 function toriel_create (phase: number) {
     if (1 == phase) {
         tiles.setCurrentTilemap(tilemap`level1`)
@@ -250,16 +261,6 @@ function BossFightStart () {
 browserEvents.onMouseMove(function (x2, y2) {
     mouseX = x2
     mouseY = y2
-})
-sprites.onDestroyed(SpriteKind.Enemy, function (sprite5) {
-    mySprite5 = sprites.create(img`
-        2 
-        `, SpriteKind.deleteimage)
-    mySprite5.setPosition(sprite5.x, sprite5.y)
-    mySprite5.lifespan = 100
-    if (sprites.allOfKind(SpriteKind.Enemy).length == 0) {
-        unlockDoors()
-    }
 })
 function unlockDoors () {
     for (let value of tiles.getTilesByType(assets.tile`myTile`)) {
@@ -530,12 +531,10 @@ let currentprojeclist: Image[] = []
 let playershot: Sprite = null
 let player_image: Sprite = null
 let angle = 0
-let mySprite5: Sprite = null
 let mouseY = 0
 let mouseX = 0
 let projectilespeed = 0
 let request_upgrades = 0
-let EXP = 0
 let prexp = 0
 let roomscleard = 0
 let guide: Sprite = null
@@ -543,6 +542,8 @@ let moverSpeed = 0
 let mySprite1: Sprite = null
 let mySprite: Sprite = null
 let notcreatingroom = false
+let EXP = 0
+let mySprite5: Sprite = null
 let player_hitbox: Sprite = null
 let savechoice = ""
 let playerClass = 0
