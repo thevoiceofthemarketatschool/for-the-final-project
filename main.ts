@@ -27,6 +27,95 @@ scene.onOverlapTile(SpriteKind.Player, assets.tile`myTile4`, function (sprite, l
 scene.onOverlapTile(SpriteKind.Player, assets.tile`myTile0`, function (sprite6, location4) {
     createValidRoom("fromUp", sprite6.x, scene.screenHeight() - 24)
 })
+sprites.onOverlap(SpriteKind.Player, SpriteKind.statue, function (sprite9, otherSprite2) {
+    timer.throttle("action", 500, function () {
+        list = [
+        15,
+        0,
+        4,
+        4,
+        0,
+        player_hitbox.x,
+        player_hitbox.y,
+        50,
+        1,
+        75,
+        0,
+        storymode
+        ]
+        if (otherSprite2.image.equals(lisOfClasses[0])) {
+            if (game.ask("do you wish to acquire", "the ways of magic?")) {
+                blockSettings.writeNumberArray(savechoice, [
+                15,
+                0,
+                4,
+                4,
+                0,
+                player_hitbox.x,
+                player_hitbox.y,
+                50,
+                1,
+                50,
+                0
+                ])
+                toriel_create(3)
+            }
+        } else if (otherSprite2.image.equals(lisOfClasses[1])) {
+            if (game.ask("do you wish to acquire", "the ways of thievery?")) {
+                blockSettings.writeNumberArray(savechoice, [
+                15,
+                1,
+                4,
+                4,
+                0,
+                player_hitbox.x,
+                player_hitbox.y,
+                70,
+                1,
+                75,
+                0
+                ])
+                toriel_create(3)
+            }
+        } else if (otherSprite2.image.equals(lisOfClasses[2])) {
+            if (game.ask("do you wish to acquire", "the ways of honor?")) {
+                blockSettings.writeNumberArray(savechoice, [
+                15,
+                2,
+                6,
+                6,
+                0,
+                player_hitbox.x,
+                player_hitbox.y,
+                40,
+                1,
+                90,
+                0
+                ])
+                toriel_create(3)
+            }
+        } else if (otherSprite2.image.equals(lisOfClasses[3])) {
+            if (game.ask("do you wish to acquire", "the ways of archery?")) {
+                blockSettings.writeNumberArray(savechoice, [
+                15,
+                3,
+                5,
+                5,
+                0,
+                player_hitbox.x,
+                player_hitbox.y,
+                60,
+                1,
+                75,
+                0
+                ])
+                toriel_create(3)
+            }
+        } else {
+            BossFightStart()
+        }
+    })
+})
 sprites.onOverlap(SpriteKind.enemyimage, SpriteKind.deleteimage, function (sprite2, otherSprite3) {
     sprites.destroy(otherSprite3)
     sprites.destroy(sprite2)
@@ -276,176 +365,80 @@ statusbars.onZero(StatusBarKind.Health, function (status) {
     story.printCharacterText("Rest now, but do not give up!", "Mysterious Voice")
     loadSaves()
 })
-sprites.onOverlap(SpriteKind.Player, SpriteKind.statue, function (sprite9, otherSprite2) {
-    timer.throttle("action", 500, function () {
-        list = [
-        15,
-        0,
-        4,
-        4,
-        0,
-        player_hitbox.x,
-        player_hitbox.y,
-        50,
-        1,
-        75,
-        0,
-        storymode
-        ]
-        if (otherSprite2.image.equals(lisOfClasses[0])) {
-            if (game.ask("do you wish to acquire", "the ways of magic?")) {
-                blockSettings.writeNumberArray(savechoice, [
-                15,
-                0,
-                4,
-                4,
-                0,
-                player_hitbox.x,
-                player_hitbox.y,
-                50,
-                1,
-                50,
-                0
-                ])
-                toriel_create(3)
-            }
-        } else if (otherSprite2.image.equals(lisOfClasses[1])) {
-            if (game.ask("do you wish to acquire", "the ways of thievery?")) {
-                blockSettings.writeNumberArray(savechoice, [
-                15,
-                1,
-                4,
-                4,
-                0,
-                player_hitbox.x,
-                player_hitbox.y,
-                70,
-                1,
-                75,
-                0
-                ])
-                toriel_create(3)
-            }
-        } else if (otherSprite2.image.equals(lisOfClasses[2])) {
-            if (game.ask("do you wish to acquire", "the ways of honor?")) {
-                blockSettings.writeNumberArray(savechoice, [
-                15,
-                2,
-                6,
-                6,
-                0,
-                player_hitbox.x,
-                player_hitbox.y,
-                40,
-                1,
-                90,
-                0
-                ])
-                toriel_create(3)
-            }
-        } else if (otherSprite2.image.equals(lisOfClasses[3])) {
-            if (game.ask("do you wish to acquire", "the ways of archery?")) {
-                blockSettings.writeNumberArray(savechoice, [
-                15,
-                3,
-                5,
-                5,
-                0,
-                player_hitbox.x,
-                player_hitbox.y,
-                60,
-                1,
-                75,
-                0
-                ])
-                toriel_create(3)
-            }
-        } else {
-            BossFightStart()
-        }
-    })
-})
 browserEvents.Equals.onEvent(browserEvents.KeyEvent.Pressed, function () {
 	
 })
 function createValidRoom (enteredFrom: string, locationX: number, locationY: number) {
     timer.throttle("action", 500, function () {
         player_hitbox.setPosition(scene.screenWidth() / 2, scene.screenHeight() / 2)
-        if (notcreatingroom) {
-            notcreatingroom = false
-            if (roomscleard + 1 == 100) {
-                if (!(game.ask("Mysterious Voice", "The fina| room 1ies ahead"))) {
-                    notcreatingroom = true
-                    return
-                }
+        if (roomscleard == 99 && storymode == 1) {
+            if (!(game.ask("Mysterious Voice", "The fina| room 1ies ahead"))) {
+                return
             }
-            if (statusbars.getStatusBarAttachedTo(StatusBarKind.Health, player_hitbox).value < statusbars.getStatusBarAttachedTo(StatusBarKind.Health, player_hitbox).max) {
-                statusbars.getStatusBarAttachedTo(StatusBarKind.Health, player_hitbox).value += 1
-            }
-            roomscleard += 1
-            if (roomscleard == 50) {
-                EXP += 21
-                room = 15
-            } else if (roomscleard == 100) {
-                room = 4
-            } else if (roomscleard == 99) {
-                EXP += 2
-                if ("fromLeft" == enteredFrom) {
-                    room = 1
-                } else if ("fromDown" == enteredFrom) {
-                    room = 3
-                } else if ("fromRight" == enteredFrom) {
-                    room = 5
-                } else if ("fromUp" == enteredFrom) {
-                    room = 9
-                }
-            } else {
-                EXP += 1
-                room = blockSettings.readNumberArray(enteredFrom)[randint(0, 7)]
-                if (15 == room && Math.percentChance(25)) {
-                    room = 16
-                }
-            }
-            blockSettings.writeNumberArray(savechoice, [
-            room,
-            playerClass,
-            statusbars.getStatusBarAttachedTo(StatusBarKind.Health, player_hitbox).max,
-            statusbars.getStatusBarAttachedTo(StatusBarKind.Health, player_hitbox).value,
-            roomscleard,
-            locationX,
-            locationY,
-            moverSpeed,
-            projectMax.max,
-            projectilespeed,
-            EXP,
-            storymode
-            ])
-            sprites.destroyAllSpritesOfKind(SpriteKind.Player)
-            sprites.destroyAllSpritesOfKind(SpriteKind.Projectile)
-            sprites.destroyAllSpritesOfKind(SpriteKind.StatusBar)
-            sprites.destroyAllSpritesOfKind(SpriteKind.Player)
-            sprites.destroyAllSpritesOfKind(SpriteKind.Food)
-            for (let index = 0; index < Math.round(roomscleard / 4); index++) {
-                mySprite3 = sprites.create(assets.image`enemyHitbox`, SpriteKind.Enemy)
-                mySprite3.setPosition(locationX, locationY)
-                while (spriteutils.distanceBetween(mySprite3, spriteutils.pos(locationX, locationY)) <= 40) {
-                    mySprite3.setPosition(randint(20, scene.screenWidth() - 20), randint(24, scene.screenHeight() - 24))
-                }
-            }
-            list2 = []
-            for (let value5 of sprites.allOfKind(SpriteKind.Enemy)) {
-                list2.push(value5.x)
-            }
-            blockSettings.writeNumberArray("" + savechoice + " Ex", list2)
-            list2 = []
-            for (let value6 of sprites.allOfKind(SpriteKind.Enemy)) {
-                list2.push(value6.y)
-            }
-            blockSettings.writeNumberArray("" + savechoice + " Ey", list2)
-            sprites.destroyAllSpritesOfKind(SpriteKind.Enemy)
-            sprites.destroyAllSpritesOfKind(SpriteKind.Player)
-            player_create()
         }
+        if (statusbars.getStatusBarAttachedTo(StatusBarKind.Health, player_hitbox).value < statusbars.getStatusBarAttachedTo(StatusBarKind.Health, player_hitbox).max) {
+            statusbars.getStatusBarAttachedTo(StatusBarKind.Health, player_hitbox).value += 1
+        }
+        roomscleard += 1
+        if (roomscleard == 50) {
+            EXP += 21
+            room = 15
+        } else if (roomscleard == 100 && storymode == 1) {
+            room = 4
+        } else if (roomscleard == 99 && storymode == 1) {
+            EXP += 2
+            if ("fromLeft" == enteredFrom) {
+                room = 1
+            } else if ("fromDown" == enteredFrom) {
+                room = 3
+            } else if ("fromRight" == enteredFrom) {
+                room = 5
+            } else if ("fromUp" == enteredFrom) {
+                room = 9
+            }
+        } else {
+            EXP += 1
+            room = blockSettings.readNumberArray(enteredFrom)[randint(0, 7)]
+        }
+        if (15 == room && Math.percentChance(25)) {
+            room = 16
+        }
+        blockSettings.writeNumberArray(savechoice, [
+        room,
+        playerClass,
+        statusbars.getStatusBarAttachedTo(StatusBarKind.Health, player_hitbox).max,
+        statusbars.getStatusBarAttachedTo(StatusBarKind.Health, player_hitbox).value,
+        roomscleard,
+        locationX,
+        locationY,
+        moverSpeed,
+        projectMax.max,
+        projectilespeed,
+        EXP,
+        storymode
+        ])
+        sprites.destroyAllSpritesOfKind(SpriteKind.Player)
+        sprites.destroyAllSpritesOfKind(SpriteKind.Projectile)
+        sprites.destroyAllSpritesOfKind(SpriteKind.StatusBar)
+        sprites.destroyAllSpritesOfKind(SpriteKind.Player)
+        sprites.destroyAllSpritesOfKind(SpriteKind.Food)
+        for (let index = 0; index < Math.round(roomscleard / 4); index++) {
+            mySprite3 = sprites.create(assets.image`enemyHitbox`, SpriteKind.Enemy)
+            mySprite3.setPosition(locationX, locationY)
+            while (spriteutils.distanceBetween(mySprite3, spriteutils.pos(locationX, locationY)) <= 40) {
+                mySprite3.setPosition(randint(20, scene.screenWidth() - 20), randint(24, scene.screenHeight() - 24))
+            }
+        }
+        list2 = []
+        list3 = []
+        for (let value5 of sprites.allOfKind(SpriteKind.Enemy)) {
+            list2.push(value5.x)
+            list3.push(value5.y)
+        }
+        blockSettings.writeNumberArray("" + savechoice + " Ex", list2)
+        blockSettings.writeNumberArray("" + savechoice + " Ey", list3)
+        sprites.destroyAllSpritesOfKind(SpriteKind.Enemy)
+        player_create()
     })
 }
 sprites.onOverlap(SpriteKind.Player, SpriteKind.Enemy, function (sprite82, otherSprite4) {
@@ -481,12 +474,12 @@ room = blockSettings.readNumberArray(savechoice)[0]
         tiles.setWallAt(tiles.getTileLocation(9, index3), true)
     }
     if (blockSettings.exists("" + savechoice + " Ex") && blockSettings.exists("" + savechoice + " Ey") && 0 < blockSettings.readNumberArray("" + savechoice + " Ex").length) {
-        if (roomscleard == 50) {
+        if (roomscleard == 50 && storymode == 1) {
             player_hitbox.sayText("Halfway there...", 1000, true)
             scene.cameraShake(4, 1000)
-        } else if (roomscleard == 99) {
+        } else if (roomscleard == 99 && storymode == 1) {
             player_hitbox.sayText("one more room...", 2000, true)
-        } else if (roomscleard == 100) {
+        } else if (roomscleard == 100 && storymode == 1) {
             toriel_create(4)
         } else {
             index4 = 0
@@ -518,9 +511,9 @@ room = blockSettings.readNumberArray(savechoice)[0]
     projectilespeed = blockSettings.readNumberArray(savechoice)[9]
     EXP = blockSettings.readNumberArray(savechoice)[10]
     player_image.setFlag(SpriteFlag.Ghost, true)
-    if (100 == roomscleard) {
+    if (1 == storymode && 100 == roomscleard) {
     	
-    } else if (99 == roomscleard) {
+    } else if (1 == storymode && 99 == roomscleard) {
         for (let value7 of tiles.getTilesByType(assets.tile`myTile`)) {
             tiles.setWallAt(value7, false)
         }
@@ -533,7 +526,6 @@ room = blockSettings.readNumberArray(savechoice)[0]
         mySprite2.y += 8
     }
     player_alive = true
-    notcreatingroom = true
 }
 sprites.onOverlap(SpriteKind.Player, SpriteKind.heal, function (sprite, otherSprite) {
     statusbars.getStatusBarAttachedTo(StatusBarKind.Health, sprite).value = statusbars.getStatusBarAttachedTo(StatusBarKind.Health, sprite).max
@@ -543,12 +535,10 @@ let swordangle = 0
 let mySprite2: Sprite = null
 let statusbar: StatusBarSprite = null
 let mySprite4: Sprite = null
+let list3: number[] = []
 let list2: number[] = []
 let mySprite3: Sprite = null
 let room = 0
-let list: number[] = []
-let storymode = 0
-let savechoice = ""
 let currentprojeclist: Image[] = []
 let playershot: Sprite = null
 let player_image: Sprite = null
@@ -565,8 +555,11 @@ let guide: Sprite = null
 let moverSpeed = 0
 let mySprite1: Sprite = null
 let mySprite: Sprite = null
-let player_hitbox: Sprite = null
 let notcreatingroom = false
+let savechoice = ""
+let storymode = 0
+let player_hitbox: Sprite = null
+let list: number[] = []
 let playerClass = 0
 let projectMax: StatusBarSprite = null
 let player_alive = false
