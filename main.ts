@@ -5,9 +5,6 @@ namespace SpriteKind {
     export const deleteimage = SpriteKind.create()
     export const boss = SpriteKind.create()
 }
-browserEvents.Equals.onEvent(browserEvents.KeyEvent.Pressed, function () {
-	
-})
 function Normalise (sender: Sprite, targetX: number, targetY: number, desiredVelo: number, ifX: boolean) {
     if (ifX) {
         return (targetX - sender.x) / Math.sqrt((targetX - sender.x) ** 2 + (targetY - sender.y) ** 2) * desiredVelo
@@ -30,98 +27,12 @@ scene.onOverlapTile(SpriteKind.Player, assets.tile`myTile4`, function (sprite, l
 scene.onOverlapTile(SpriteKind.Player, assets.tile`myTile0`, function (sprite6, location4) {
     createValidRoom("fromUp", sprite6.x, scene.screenHeight() - 24)
 })
-sprites.onOverlap(SpriteKind.Player, SpriteKind.statue, function (sprite9, otherSprite2) {
-    timer.throttle("action", 500, function () {
-        if (otherSprite2.image.equals(lisOfClasses[0])) {
-            if (game.ask("do you wish to acquire", "the ways of magic?")) {
-                blockSettings.writeNumberArray(savechoice, [
-                15,
-                0,
-                4,
-                4,
-                0,
-                player_hitbox.x,
-                player_hitbox.y,
-                50,
-                1,
-                50,
-                0
-                ])
-                toriel_create(3)
-            }
-        } else if (otherSprite2.image.equals(lisOfClasses[1])) {
-            if (game.ask("do you wish to acquire", "the ways of thievery?")) {
-                blockSettings.writeNumberArray(savechoice, [
-                15,
-                1,
-                4,
-                4,
-                0,
-                player_hitbox.x,
-                player_hitbox.y,
-                70,
-                1,
-                75,
-                0
-                ])
-                toriel_create(3)
-            }
-        } else if (otherSprite2.image.equals(lisOfClasses[2])) {
-            if (game.ask("do you wish to acquire", "the ways of honor?")) {
-                blockSettings.writeNumberArray(savechoice, [
-                15,
-                2,
-                6,
-                6,
-                0,
-                player_hitbox.x,
-                player_hitbox.y,
-                40,
-                1,
-                90,
-                0
-                ])
-                toriel_create(3)
-            }
-        } else if (otherSprite2.image.equals(lisOfClasses[3])) {
-            if (game.ask("do you wish to acquire", "the ways of archery?")) {
-                blockSettings.writeNumberArray(savechoice, [
-                15,
-                3,
-                5,
-                5,
-                0,
-                player_hitbox.x,
-                player_hitbox.y,
-                60,
-                1,
-                75,
-                0
-                ])
-                toriel_create(3)
-            }
-        } else {
-            BossFightStart()
-        }
-    })
-})
 sprites.onOverlap(SpriteKind.enemyimage, SpriteKind.deleteimage, function (sprite2, otherSprite3) {
     sprites.destroy(otherSprite3)
     sprites.destroy(sprite2)
 })
 scene.onOverlapTile(SpriteKind.Player, assets.tile`myTile2`, function (sprite3, location3) {
     createValidRoom("fromDown", sprite3.x, 24)
-})
-sprites.onDestroyed(SpriteKind.Enemy, function (sprite5) {
-    mySprite5 = sprites.create(img`
-        2 
-        `, SpriteKind.deleteimage)
-    EXP += 0.5
-    mySprite5.setPosition(sprite5.x, sprite5.y)
-    mySprite5.lifespan = 100
-    if (sprites.allOfKind(SpriteKind.Enemy).length == 0) {
-        unlockDoors()
-    }
 })
 function toriel_create (phase: number) {
     if (1 == phase) {
@@ -262,6 +173,17 @@ browserEvents.onMouseMove(function (x2, y2) {
     mouseX = x2
     mouseY = y2
 })
+sprites.onDestroyed(SpriteKind.Enemy, function (sprite5) {
+    mySprite5 = sprites.create(img`
+        2 
+        `, SpriteKind.deleteimage)
+    EXP += 0.5
+    mySprite5.setPosition(sprite5.x, sprite5.y)
+    mySprite5.lifespan = 100
+    if (sprites.allOfKind(SpriteKind.Enemy).length == 0) {
+        unlockDoors()
+    }
+})
 function unlockDoors () {
     for (let value of tiles.getTilesByType(assets.tile`myTile`)) {
         tiles.setWallAt(value, false)
@@ -327,12 +249,15 @@ player_create()
         } else {
             loadSaves()
         }
-    } else {
-        if (game.ask("This save is empty", "Make a new one?.")) {
-            toriel_create(1)
+    } else if (game.ask("This save is empty", "Make a new one?.")) {
+        if (game.ask("Storymode?")) {
+            storymode = 1
         } else {
-            loadSaves()
+            storymode = 0
         }
+        toriel_create(1)
+    } else {
+        loadSaves()
     }
 }
 statusbars.onZero(StatusBarKind.Health, function (status) {
@@ -350,6 +275,98 @@ statusbars.onZero(StatusBarKind.Health, function (status) {
     game.splash(roomscleard)
     story.printCharacterText("Rest now, but do not give up!", "Mysterious Voice")
     loadSaves()
+})
+sprites.onOverlap(SpriteKind.Player, SpriteKind.statue, function (sprite9, otherSprite2) {
+    timer.throttle("action", 500, function () {
+        list = [
+        15,
+        0,
+        4,
+        4,
+        0,
+        player_hitbox.x,
+        player_hitbox.y,
+        50,
+        1,
+        75,
+        0,
+        storymode
+        ]
+        if (otherSprite2.image.equals(lisOfClasses[0])) {
+            if (game.ask("do you wish to acquire", "the ways of magic?")) {
+                blockSettings.writeNumberArray(savechoice, [
+                15,
+                0,
+                4,
+                4,
+                0,
+                player_hitbox.x,
+                player_hitbox.y,
+                50,
+                1,
+                50,
+                0
+                ])
+                toriel_create(3)
+            }
+        } else if (otherSprite2.image.equals(lisOfClasses[1])) {
+            if (game.ask("do you wish to acquire", "the ways of thievery?")) {
+                blockSettings.writeNumberArray(savechoice, [
+                15,
+                1,
+                4,
+                4,
+                0,
+                player_hitbox.x,
+                player_hitbox.y,
+                70,
+                1,
+                75,
+                0
+                ])
+                toriel_create(3)
+            }
+        } else if (otherSprite2.image.equals(lisOfClasses[2])) {
+            if (game.ask("do you wish to acquire", "the ways of honor?")) {
+                blockSettings.writeNumberArray(savechoice, [
+                15,
+                2,
+                6,
+                6,
+                0,
+                player_hitbox.x,
+                player_hitbox.y,
+                40,
+                1,
+                90,
+                0
+                ])
+                toriel_create(3)
+            }
+        } else if (otherSprite2.image.equals(lisOfClasses[3])) {
+            if (game.ask("do you wish to acquire", "the ways of archery?")) {
+                blockSettings.writeNumberArray(savechoice, [
+                15,
+                3,
+                5,
+                5,
+                0,
+                player_hitbox.x,
+                player_hitbox.y,
+                60,
+                1,
+                75,
+                0
+                ])
+                toriel_create(3)
+            }
+        } else {
+            BossFightStart()
+        }
+    })
+})
+browserEvents.Equals.onEvent(browserEvents.KeyEvent.Pressed, function () {
+	
 })
 function createValidRoom (enteredFrom: string, locationX: number, locationY: number) {
     timer.throttle("action", 500, function () {
@@ -400,7 +417,8 @@ function createValidRoom (enteredFrom: string, locationX: number, locationY: num
             moverSpeed,
             projectMax.max,
             projectilespeed,
-            EXP
+            EXP,
+            storymode
             ])
             sprites.destroyAllSpritesOfKind(SpriteKind.Player)
             sprites.destroyAllSpritesOfKind(SpriteKind.Projectile)
@@ -439,6 +457,7 @@ function player_create () {
 room = blockSettings.readNumberArray(savechoice)[0]
     tiles.setCurrentTilemap(listOfRooms[room])
     playerClass = blockSettings.readNumberArray(savechoice)[1]
+    storymode = blockSettings.readNumberArray(savechoice)[11]
     player_hitbox = sprites.create(img`
         . . a a a a a a . . 
         . a a c c c c a a . 
@@ -527,25 +546,27 @@ let mySprite4: Sprite = null
 let list2: number[] = []
 let mySprite3: Sprite = null
 let room = 0
+let list: number[] = []
+let storymode = 0
+let savechoice = ""
 let currentprojeclist: Image[] = []
 let playershot: Sprite = null
 let player_image: Sprite = null
 let angle = 0
+let mySprite5: Sprite = null
 let mouseY = 0
 let mouseX = 0
 let projectilespeed = 0
 let request_upgrades = 0
+let EXP = 0
 let prexp = 0
 let roomscleard = 0
 let guide: Sprite = null
 let moverSpeed = 0
 let mySprite1: Sprite = null
 let mySprite: Sprite = null
-let notcreatingroom = false
-let EXP = 0
-let mySprite5: Sprite = null
 let player_hitbox: Sprite = null
-let savechoice = ""
+let notcreatingroom = false
 let playerClass = 0
 let projectMax: StatusBarSprite = null
 let player_alive = false
