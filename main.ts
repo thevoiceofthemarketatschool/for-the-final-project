@@ -27,95 +27,6 @@ scene.onOverlapTile(SpriteKind.Player, assets.tile`myTile4`, function (sprite, l
 scene.onOverlapTile(SpriteKind.Player, assets.tile`myTile0`, function (sprite6, location4) {
     createValidRoom("fromUp", sprite6.x, scene.screenHeight() - 24)
 })
-sprites.onOverlap(SpriteKind.Player, SpriteKind.statue, function (sprite9, otherSprite2) {
-    timer.throttle("action", 500, function () {
-        list = [
-        15,
-        0,
-        4,
-        4,
-        0,
-        player_hitbox.x,
-        player_hitbox.y,
-        50,
-        1,
-        75,
-        0,
-        storymode
-        ]
-        if (otherSprite2.image.equals(lisOfClasses[0])) {
-            if (game.ask("do you wish to acquire", "the ways of magic?")) {
-                blockSettings.writeNumberArray(savechoice, [
-                15,
-                0,
-                4,
-                4,
-                0,
-                player_hitbox.x,
-                player_hitbox.y,
-                50,
-                1,
-                50,
-                0
-                ])
-                toriel_create(3)
-            }
-        } else if (otherSprite2.image.equals(lisOfClasses[1])) {
-            if (game.ask("do you wish to acquire", "the ways of thievery?")) {
-                blockSettings.writeNumberArray(savechoice, [
-                15,
-                1,
-                4,
-                4,
-                0,
-                player_hitbox.x,
-                player_hitbox.y,
-                70,
-                1,
-                75,
-                0
-                ])
-                toriel_create(3)
-            }
-        } else if (otherSprite2.image.equals(lisOfClasses[2])) {
-            if (game.ask("do you wish to acquire", "the ways of honor?")) {
-                blockSettings.writeNumberArray(savechoice, [
-                15,
-                2,
-                6,
-                6,
-                0,
-                player_hitbox.x,
-                player_hitbox.y,
-                40,
-                1,
-                90,
-                0
-                ])
-                toriel_create(3)
-            }
-        } else if (otherSprite2.image.equals(lisOfClasses[3])) {
-            if (game.ask("do you wish to acquire", "the ways of archery?")) {
-                blockSettings.writeNumberArray(savechoice, [
-                15,
-                3,
-                5,
-                5,
-                0,
-                player_hitbox.x,
-                player_hitbox.y,
-                60,
-                1,
-                75,
-                0
-                ])
-                toriel_create(3)
-            }
-        } else {
-            BossFightStart()
-        }
-    })
-})
 sprites.onOverlap(SpriteKind.enemyimage, SpriteKind.deleteimage, function (sprite2, otherSprite3) {
     sprites.destroy(otherSprite3)
     sprites.destroy(sprite2)
@@ -365,6 +276,73 @@ statusbars.onZero(StatusBarKind.Health, function (status) {
     story.printCharacterText("Rest now, but do not give up!", "Mysterious Voice")
     loadSaves()
 })
+sprites.onOverlap(SpriteKind.Player, SpriteKind.statue, function (sprite9, otherSprite2) {
+    timer.throttle("action", 500, function () {
+        list = [
+        15,
+        0,
+        4,
+        4,
+        0,
+        player_hitbox.x,
+        player_hitbox.y,
+        50,
+        1,
+        75,
+        0,
+        storymode
+        ]
+        if (otherSprite2.image.equals(lisOfClasses[0])) {
+            if (game.ask("do you wish to acquire", "the ways of magic?")) {
+                list[9] = 50
+                blockSettings.writeNumberArray(savechoice, list)
+                toriel_create(3)
+            }
+        } else if (otherSprite2.image.equals(lisOfClasses[1])) {
+            if (game.ask("do you wish to acquire", "the ways of thievery?")) {
+                list[7] = 70
+                blockSettings.writeNumberArray(savechoice, list)
+                toriel_create(3)
+            }
+        } else if (otherSprite2.image.equals(lisOfClasses[2])) {
+            if (game.ask("do you wish to acquire", "the ways of honor?")) {
+                blockSettings.writeNumberArray(savechoice, [
+                15,
+                2,
+                6,
+                6,
+                0,
+                player_hitbox.x,
+                player_hitbox.y,
+                40,
+                1,
+                90,
+                0
+                ])
+                toriel_create(3)
+            }
+        } else if (otherSprite2.image.equals(lisOfClasses[3])) {
+            if (game.ask("do you wish to acquire", "the ways of archery?")) {
+                blockSettings.writeNumberArray(savechoice, [
+                15,
+                3,
+                5,
+                5,
+                0,
+                player_hitbox.x,
+                player_hitbox.y,
+                60,
+                1,
+                75,
+                0
+                ])
+                toriel_create(3)
+            }
+        } else {
+            BossFightStart()
+        }
+    })
+})
 browserEvents.Equals.onEvent(browserEvents.KeyEvent.Pressed, function () {
 	
 })
@@ -446,8 +424,7 @@ sprites.onOverlap(SpriteKind.Player, SpriteKind.Enemy, function (sprite82, other
     statusbars.getStatusBarAttachedTo(StatusBarKind.Health, player_hitbox).value += -1
 })
 function player_create () {
-    let index4: number;
-room = blockSettings.readNumberArray(savechoice)[0]
+    room = blockSettings.readNumberArray(savechoice)[0]
     tiles.setCurrentTilemap(listOfRooms[room])
     playerClass = blockSettings.readNumberArray(savechoice)[1]
     storymode = blockSettings.readNumberArray(savechoice)[11]
@@ -535,10 +512,14 @@ let swordangle = 0
 let mySprite2: Sprite = null
 let statusbar: StatusBarSprite = null
 let mySprite4: Sprite = null
+let index4 = 0
 let list3: number[] = []
 let list2: number[] = []
 let mySprite3: Sprite = null
 let room = 0
+let list: number[] = []
+let storymode = 0
+let savechoice = ""
 let currentprojeclist: Image[] = []
 let playershot: Sprite = null
 let player_image: Sprite = null
@@ -555,11 +536,8 @@ let guide: Sprite = null
 let moverSpeed = 0
 let mySprite1: Sprite = null
 let mySprite: Sprite = null
-let notcreatingroom = false
-let savechoice = ""
-let storymode = 0
 let player_hitbox: Sprite = null
-let list: number[] = []
+let notcreatingroom = false
 let playerClass = 0
 let projectMax: StatusBarSprite = null
 let player_alive = false
